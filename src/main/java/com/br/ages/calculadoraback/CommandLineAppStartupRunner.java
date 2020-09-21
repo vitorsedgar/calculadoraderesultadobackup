@@ -38,12 +38,19 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 				ProductEntity prod1 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Débito").build());
 				ProductEntity prod2 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Crédito").build());
 
-				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod1).build()).value(BigDecimal.valueOf(200)).weight(1.0).build());
-				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod2).build()).value(BigDecimal.valueOf(100)).weight(2.0).build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod1).build()).value(BigDecimal.valueOf(2000)).weight(1.0).build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod2).build()).value(BigDecimal.valueOf(1000)).weight(2.0).build());
 
-				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop2).idProd(prod1).build()).value(BigDecimal.valueOf(400)).weight(2.0).build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop2).idProd(prod1).build()).value(BigDecimal.valueOf(4000)).weight(2.0).build());
 
-				anualResultService.save(AnualResultEntity.builder().anualResultPK(AnualResultPK.builder().idCoop(coop1).year(2020L).build()).result(new BigDecimal(800)).build());
+				anualResultService.save(AnualResultEntity.builder().anualResultPK(AnualResultPK.builder().idCoop(coop1).year(2020L).build()).result(new BigDecimal(10000)).build());
+
+				ProductEntity prod3 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Beneficio").build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod3).build()).value(BigDecimal.valueOf(3000)).weight(3.0).build());
+				ProductEntity prod4 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Conjunto").build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod4).build()).value(BigDecimal.valueOf(2500)).weight(2.0).build());
+				ProductEntity prod5 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Estudantil").build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod5).build()).value(BigDecimal.valueOf(2500)).weight(1.0).build());
 				log.info("Terminou de popular");
 		}
 }
