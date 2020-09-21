@@ -48,9 +48,9 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 				ProductEntity prod3 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Beneficio").build());
 				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod3).build()).value(BigDecimal.valueOf(3000)).weight(3.0).build());
 				ProductEntity prod4 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Conjunto").build());
-				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod4).build()).value(BigDecimal.valueOf(2500)).weight(2.0).build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod4).build()).value(BigDecimal.valueOf(2000)).weight(2.0).build());
 				ProductEntity prod5 = prodService.saveProduct(Product.builder().categoryName("Cartão").name("Cartão Estudantil").build());
-				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod5).build()).value(BigDecimal.valueOf(2500)).weight(1.0).build());
+				coopProdService.save(CooperativeProductEntity.builder().coopProdPK(CoopProdPK.builder().idCoop(coop1).idProd(prod5).build()).value(BigDecimal.valueOf(2000)).weight(1.0).build());
 				log.info("Terminou de popular");
 		}
 }
