@@ -2,13 +2,8 @@ package com.br.ages.calculadoraback.service;
 
 import com.br.ages.calculadoraback.entity.AnualResultEntity;
 import com.br.ages.calculadoraback.entity.AnualResultPK;
-import com.br.ages.calculadoraback.entity.CoopProdPK;
-import com.br.ages.calculadoraback.entity.CooperativeProductEntity;
 import com.br.ages.calculadoraback.repository.AnualResultRepository;
-import com.br.ages.calculadoraback.repository.CooperativeProductRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AnualResultService {
@@ -20,10 +15,14 @@ public class AnualResultService {
 		}
 
 		public void save(AnualResultEntity entity) {
+				anualResultRepository.findByAnualResultPK_IdCoop_CodCoopAndAnualResultPK_Year(entity.getAnualResultPK().getIdCoop().getCodCoop(), entity.getAnualResultPK().getYear())
+						.ifPresent(it -> entity.setAnualResultPK(it.getAnualResultPK()));
+
 				anualResultRepository.save(entity);
 		}
 
 		public AnualResultEntity findByAnualResultPK(AnualResultPK anualResultPK) {
 				return this.anualResultRepository.findByAnualResultPK(anualResultPK);
 		}
+
 }

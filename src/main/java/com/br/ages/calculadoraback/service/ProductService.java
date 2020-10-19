@@ -8,7 +8,6 @@ import com.br.ages.calculadoraback.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +23,9 @@ public class ProductService {
     }
 
     public ProductEntity saveProduct(Product product) {
+        productRepository.findByName(product.getName()).ifPresent(p -> product.setIdProd(p.getIdProd()));
         ProductEntity entity = ProductEntity.builder()
+            .idProd(product.getIdProd())
                 .name(product.getName())
                 .category(null)
                 .build();

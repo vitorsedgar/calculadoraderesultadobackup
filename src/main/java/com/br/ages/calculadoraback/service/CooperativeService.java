@@ -5,6 +5,8 @@ import com.br.ages.calculadoraback.entity.CooperativeEntity;
 import com.br.ages.calculadoraback.repository.CooperativeRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CooperativeService {
 		private final CooperativeRepository cooperativeRepository;
@@ -14,6 +16,8 @@ public class CooperativeService {
 		}
 
 		public CooperativeEntity saveCoop(Cooperative coop) {
+				CooperativeEntity coopBanco = getCoopByCodCoop(coop.getCodCoop());
+				if (coopBanco != null) coop.setIdCoop(coopBanco.getIdCoop());
 				return cooperativeRepository.save(CooperativeEntity
 						.builder()
 						.codCoop(coop.getCodCoop())
@@ -21,7 +25,17 @@ public class CooperativeService {
 						.name(coop.getName())
 						.build());
 		}
-		public CooperativeEntity getCoopByCodCoop(String codCoop){
+
+		public CooperativeEntity getCoopByCodCoop(String codCoop) {
 				return cooperativeRepository.findByCodCoop(codCoop);
+		}
+
+		public void deleteCoopByCodCoop(String codCoop) {
+				CooperativeEntity coop = getCoopByCodCoop(codCoop);
+				cooperativeRepository.deleteById(coop.getIdCoop());
+		}
+
+		public List<CooperativeEntity> findAll() {
+				return (List<CooperativeEntity>) cooperativeRepository.findAll();
 		}
 }

@@ -4,15 +4,18 @@ import com.br.ages.calculadoraback.dto.AddProductRequestDTO;
 import com.br.ages.calculadoraback.dto.AssociateProductDTO;
 import com.br.ages.calculadoraback.dto.CooperativeProductDTO;
 import com.br.ages.calculadoraback.dto.Product;
-import com.br.ages.calculadoraback.entity.*;
+import com.br.ages.calculadoraback.entity.CoopProdPK;
+import com.br.ages.calculadoraback.entity.CooperativeEntity;
+import com.br.ages.calculadoraback.entity.CooperativeProductEntity;
+import com.br.ages.calculadoraback.entity.ProductEntity;
 import com.br.ages.calculadoraback.repository.CooperativeProductRepository;
 import com.br.ages.calculadoraback.utils.exceptions.CooperativeNotFoundException;
 import com.br.ages.calculadoraback.utils.exceptions.ProductException;
 import com.br.ages.calculadoraback.utils.exceptions.ProductNotFoundException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +34,8 @@ public class CooperativeProductService {
     }
 
     public CooperativeProductEntity save(CooperativeProductEntity entity) {
+        Optional<CooperativeProductEntity> coPrBanco = coopProdRepository.findByCoopProdPK_IdCoop_CodCoopAndCoopProdPK_IdProd_IdProd(entity.getCoopProdPK().getIdCoop().getCodCoop(), entity.getCoopProdPK().getIdProd().getIdProd());
+        coPrBanco.ifPresent(coProdEntity -> entity.setCoopProdPK(coProdEntity.getCoopProdPK()));
         return coopProdRepository.save(entity);
     }
 
