@@ -21,4 +21,7 @@ public class CooperativeService {
 						.name(coop.getName())
 						.build());
 		}
+		public CooperativeEntity getCoopByCodCoop(String codCoop){
+				return cooperativeRepository.findByCodCoop(codCoop);
+		}
 }

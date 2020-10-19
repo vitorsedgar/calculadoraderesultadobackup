@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test
+    active: heroku
 ---
 spring:
   profiles: local
@@ -49,4 +49,25 @@ spring:
       console:
         enabled: true
         path: /console
+
+---
+spring:
+  profiles: heroku
+  datasource:
+    platforma: postgres
+    url: jdbc:postgresql://ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9fmr018288rbq
+    username: axejtzztvdnzme
+    password: 52aa38cacbf2e38085fc52604a58725c094d97db5689b9f9fab5fe3afb2002fc
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    ddl-auto: none
+    hibernate:
+      ##dialect: org.hibernate.dialect.Oracle10gDialect
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
 

@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
-	private long idProd;
-	private String name;
-	private String categoryName;
-	private Double weight;
-	private BigDecimal value;
+public class RegisterDTO {
+    private String document;
+    private String name;
+    private String codCoop;
+    private String password;
 }

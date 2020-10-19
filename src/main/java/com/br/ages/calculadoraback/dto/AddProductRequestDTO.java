@@ -11,7 +11,8 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClientProduct {
-		private Long id;
-		private BigDecimal value;
+public class AddProductRequestDTO {
+    private long idProd;
+    private BigDecimal value;
+    private Double weight;
 }

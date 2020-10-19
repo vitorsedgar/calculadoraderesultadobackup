@@ -7,15 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
-	private long idProd;
-	private String name;
-	private String categoryName;
-	private Double weight;
-	private BigDecimal value;
+public class AssociateProductDTO {
+		private Long id;
+		private BigDecimal value;
 }
