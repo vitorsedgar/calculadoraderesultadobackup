@@ -22,5 +22,5 @@ public class AnualResultPK implements Serializable {
 		private CooperativeEntity idCoop;
 
 		@Column(name = "year")
-		private Long year;
+		private int year;
 }

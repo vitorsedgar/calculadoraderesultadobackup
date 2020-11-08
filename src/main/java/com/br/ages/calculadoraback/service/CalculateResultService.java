@@ -55,8 +55,8 @@ public class CalculateResultService {
                 .getResult();
     }
 
-    private Long getYear() {
-        return Long.valueOf(localDateUtil.now().getYear());
+    private int getYear() {
+        return localDateUtil.now().getYear();
     }
 
     // FIXME: Buscar idCoop na autenticacao

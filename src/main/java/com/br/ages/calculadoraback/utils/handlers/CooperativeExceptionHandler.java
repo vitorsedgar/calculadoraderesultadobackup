@@ -1,5 +1,6 @@
 package com.br.ages.calculadoraback.utils.handlers;
 
+import com.br.ages.calculadoraback.utils.exceptions.CooperativeException;
 import com.br.ages.calculadoraback.utils.exceptions.CooperativeNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,5 +12,10 @@ public class CooperativeExceptionHandler {
     @ExceptionHandler(value = CooperativeNotFoundException.class)
     public ResponseEntity<Object> notFoundException(CooperativeNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = CooperativeException.class)
+    public ResponseEntity<Object> exception(CooperativeException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

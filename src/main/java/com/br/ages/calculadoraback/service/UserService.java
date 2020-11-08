@@ -41,10 +41,8 @@ public class UserService {
     }
 
     public UserEntity save(UserEntity entity) {
-        userRepository.findByDocument(entity.getDocument()).ifPresent(it -> entity.setId_user(it.getId_user()));
         return userRepository.save(entity);
     }
-
 
     public UserEntity registerAssociate(RegisterDTO associate) {
         CooperativeEntity coopEntity = cooperativeService.getCoopByCodCoop(associate.getCodCoop());

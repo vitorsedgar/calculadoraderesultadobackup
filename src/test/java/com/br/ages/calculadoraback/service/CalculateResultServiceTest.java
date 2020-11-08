@@ -95,7 +95,7 @@ public class CalculateResultServiceTest {
         AnualResultEntity anualResultEntityMock = AnualResultEntity.builder()
                 .anualResultPK(AnualResultPK.builder()
                         .idCoop(CooperativeEntity.builder().idCoop(1L).build())
-                        .year(1997L)
+                        .year(1997)
                         .build())
                 .result(BigDecimal.valueOf(10000))
                 .build();

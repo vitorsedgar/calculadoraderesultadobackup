@@ -1,5 +1,6 @@
 package com.br.ages.calculadoraback.security;
 
+import com.br.ages.calculadoraback.dto.LoginDTO;
 import com.br.ages.calculadoraback.entity.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
 
-        UserEntity usuario = new ObjectMapper().readValue(request.getInputStream(), UserEntity.class);
+        LoginDTO usuario = new ObjectMapper().readValue(request.getInputStream(), LoginDTO.class);
 
         return getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(

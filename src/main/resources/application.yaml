@@ -64,7 +64,7 @@ spring:
     ddl-auto: none
     hibernate:
       ##dialect: org.hibernate.dialect.Oracle10gDialect
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         jdbc:

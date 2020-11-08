@@ -1,21 +1,14 @@
 package com.br.ages.calculadoraback.service;
 
-import com.br.ages.calculadoraback.dto.AddProductRequestDTO;
-import com.br.ages.calculadoraback.dto.AssociateProductDTO;
-import com.br.ages.calculadoraback.dto.CooperativeProductDTO;
-import com.br.ages.calculadoraback.dto.Product;
-import com.br.ages.calculadoraback.entity.CoopProdPK;
-import com.br.ages.calculadoraback.entity.CooperativeEntity;
-import com.br.ages.calculadoraback.entity.CooperativeProductEntity;
-import com.br.ages.calculadoraback.entity.ProductEntity;
+import com.br.ages.calculadoraback.dto.*;
+import com.br.ages.calculadoraback.entity.*;
 import com.br.ages.calculadoraback.repository.CooperativeProductRepository;
-import com.br.ages.calculadoraback.utils.exceptions.CooperativeNotFoundException;
-import com.br.ages.calculadoraback.utils.exceptions.ProductException;
-import com.br.ages.calculadoraback.utils.exceptions.ProductNotFoundException;
+import com.br.ages.calculadoraback.utils.Validations;
+import com.br.ages.calculadoraback.utils.exceptions.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,18 +27,17 @@ public class CooperativeProductService {
     }
 
     public CooperativeProductEntity save(CooperativeProductEntity entity) {
-        Optional<CooperativeProductEntity> coPrBanco = coopProdRepository.findByCoopProdPK_IdCoop_CodCoopAndCoopProdPK_IdProd_IdProd(entity.getCoopProdPK().getIdCoop().getCodCoop(), entity.getCoopProdPK().getIdProd().getIdProd());
-        coPrBanco.ifPresent(coProdEntity -> entity.setCoopProdPK(coProdEntity.getCoopProdPK()));
         return coopProdRepository.save(entity);
     }
 
     public Product addProduct(String authorization, AddProductRequestDTO productDTO) {
         // FIXME: Descomentar e testar com usuário de role cooperative
-        // TODO: avaliar se não existe um limite para o peso
         // UserEntity user = this.userService.getLoggedUser();
         // Long idCoop = this.cooperativeService.getCoopByCodCoop(user.getCodCoop().getCodCoop()).getIdCoop();
 
-        CooperativeEntity cooperativeEntity = cooperativeService.getCoopByCodCoop("0101");
+        // TODO: Alterar para utilizar o codCoop do usuário logado
+        String codCoopeMock = "0101";
+        CooperativeEntity cooperativeEntity = cooperativeService.getCoopByCodCoop(codCoopeMock);
         // Verifica se cooperativa não existe
         if (cooperativeEntity == null)
             throw new CooperativeNotFoundException();
@@ -55,7 +47,18 @@ public class CooperativeProductService {
         if (productEntity == null)
             throw new ProductNotFoundException(productDTO.getIdProd());
 
-        CooperativeProductEntity cooperativeProductEntity = CooperativeProductEntity.builder()
+        CooperativeProductEntity cooperativeProductEntity = findByCoopProdPK(
+                CoopProdPK.builder()
+                        .idCoop(cooperativeEntity)
+                        .idProd(ProductEntity.builder().idProd(productDTO.getIdProd()).build())
+                        .build());
+        // Verifica se produto já foi cadastrado nesta cooperativa.
+        if (cooperativeProductEntity != null)
+            throw new ProductException("Este produto já foi cadastrado nesta cooperativa");
+
+        this.validateProductWeight(productDTO.getWeight(), codCoopeMock);
+
+        cooperativeProductEntity = CooperativeProductEntity.builder()
             .coopProdPK(
                 CoopProdPK.builder()
                     .idProd(productEntity)
@@ -68,14 +71,57 @@ public class CooperativeProductService {
         return parseToProduct(productSaved);
     }
 
+    public Product editProduct(String authorization, AddProductRequestDTO productRequestDTO) {
+        // FIXME: Descomentar e testar com usuário de role cooperative
+        // UserEntity user = this.userService.getLoggedUser();
+        // Long idCoop = this.cooperativeService.getCoopByCodCoop(user.getCodCoop().getCodCoop()).getIdCoop();
+
+        // TODO: Alterar para utilizar o codCoop do usuário logado
+        String codCoopeMock = "0101";
+        CooperativeEntity cooperativeEntity = cooperativeService.getCoopByCodCoop(codCoopeMock);
+        // Verifica se cooperativa não existe
+        if (cooperativeEntity == null)
+            throw new CooperativeNotFoundException();
+
+        ProductEntity productEntity = productService.getProductById(productRequestDTO.getIdProd());
+        // Verifica se produto não existe
+        if (productEntity == null)
+            throw new ProductNotFoundException(productRequestDTO.getIdProd());
+
+        CooperativeProductEntity coopProductEntity = this.coopProdRepository.findByCoopProdPK(
+            CoopProdPK.builder()
+                .idCoop(cooperativeEntity)
+                .idProd(productEntity)
+                .build()
+        );
+
+        this.validateProductWeight(productRequestDTO.getWeight(), codCoopeMock);
+
+        Validations.validatePositiveNumber(productRequestDTO.getValue());
+        Validations.validatePositiveNumber(productRequestDTO.getWeight());
+
+        coopProductEntity.setValue(productRequestDTO.getValue());
+        coopProductEntity.setWeight(productRequestDTO.getWeight());
+
+        CooperativeProductEntity product = this.coopProdRepository.save(coopProductEntity);
+        return parseToProduct(product);
+    }
+
+    private void validateProductWeight(Double weight, String codCoop) {
+        Double totalWeightCoop = this.coopProdRepository.getCoopTotalWeight(codCoop);
+        Double totalWeight = totalWeightCoop + weight;
+        if (totalWeight > 100.0) {
+            throw new CooperativeProductWeightOutOfBoundException();
+        }
+    }
+
     private Product parseToProduct(CooperativeProductEntity cooperativeProductEntity) {
         return Product.builder()
             .idProd(cooperativeProductEntity.getCoopProdPK().getIdProd().getIdProd())
             .name(cooperativeProductEntity.getCoopProdPK().getIdProd().getName())
             .value(cooperativeProductEntity.getValue())
             .weight(cooperativeProductEntity.getWeight())
-            // Descomentar após ter categoria / Lucas Martins
-            //.categoryName(cooperativeProductEntity.getCoopProdPK().getIdProd().getCategory().getName())
+            .categoryName(cooperativeProductEntity.getCoopProdPK().getIdProd().getCategory().getName())
             .build();
     }
 
@@ -111,5 +157,20 @@ public class CooperativeProductService {
                 .value(cooperativeProductEntity.getValue())
                 .associateProduct(product)
                 .build();
+    }
+
+    public List<Product> findProductsByCodCoop(String codCoop, String authorization) {
+        UserEntity user = userService.getUser(authorization);
+
+        return coopProdRepository.findByCoopProdPK_IdCoop_CodCoop(codCoop)
+                .stream()
+                .map(it -> Product.builder()
+                        .name(it.getCoopProdPK().getIdProd().getName())
+                        .idProd(it.getCoopProdPK().getIdProd().getIdProd())
+                        .categoryName(it.getCoopProdPK().getIdProd().getCategory().getName())
+                        .weight(it.getWeight())
+                        .value(it.getValue())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

@@ -1,10 +1,18 @@
 package com.br.ages.calculadoraback.service;
 
+import com.br.ages.calculadoraback.dto.NonCoopProductDTO;
 import com.br.ages.calculadoraback.dto.Product;
+import com.br.ages.calculadoraback.entity.CategoryEntity;
 import com.br.ages.calculadoraback.entity.ProductEntity;
 import com.br.ages.calculadoraback.entity.UserEntity;
 import com.br.ages.calculadoraback.repository.CooperativeProductRepository;
 import com.br.ages.calculadoraback.repository.ProductRepository;
+import com.br.ages.calculadoraback.utils.exceptions.ProductNotFoundException;
+import com.br.ages.calculadoraback.utils.exceptions.ProductsNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,40 +23,36 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CooperativeProductRepository coopProductRepository;
     private UserService userService;
+    private  CategoryService categoryService;
 
-    public ProductService(ProductRepository productRepository, CooperativeProductRepository coopProductRepository, UserService userService) {
+    public ProductService(ProductRepository productRepository, CooperativeProductRepository coopProductRepository, UserService userService, CategoryService categoryService) {
         this.productRepository = productRepository;
         this.coopProductRepository = coopProductRepository;
         this.userService = userService;
+        this.categoryService = categoryService;
     }
 
-    public ProductEntity saveProduct(Product product) {
-        productRepository.findByName(product.getName()).ifPresent(p -> product.setIdProd(p.getIdProd()));
-        ProductEntity entity = ProductEntity.builder()
-            .idProd(product.getIdProd())
-                .name(product.getName())
-                .category(null)
-                .build();
-        return productRepository.save(entity);
+    public ProductEntity save(ProductEntity product) {
+        return productRepository.save(product);
     }
 
     public ProductEntity getProductById(Long idProd) {
         return productRepository.findByIdProd(idProd);
     }
 
-    public List<Product> findProductsByCodCoop(String codCoop, String authorization) {
-        UserEntity user = userService.getUser(authorization);
+    public Page<ProductEntity> getAllProducts(String name, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.Direction.ASC,
+                "name");
 
-        return coopProductRepository.findByCoopProdPK_IdCoop_CodCoop(codCoop)
-                .stream()
-                .map(it -> Product.builder()
-                        .name(it.getCoopProdPK().getIdProd().getName())
-                        .idProd(it.getCoopProdPK().getIdProd().getIdProd())
-                        //TODO descomentar quando houver categorias
-//								.categoryName(it.getCoopProdPK().getIdProd().getCategory().getName())
-                        .weight(it.getWeight())
-                        .categoryName("Cartão")
-                        .build())
-                .collect(Collectors.toList());
+        Page<ProductEntity> pageProduct = productRepository.search(name.toLowerCase(), pageRequest);
+
+        if (pageProduct == null || pageProduct.getContent() == null || pageProduct.getContent().isEmpty()) {
+            throw new ProductsNotFoundException();
+        }
+
+        return pageProduct;
     }
 }

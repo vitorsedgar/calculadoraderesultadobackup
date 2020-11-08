@@ -1,5 +1,6 @@
 package com.br.ages.calculadoraback.api;
 
+import com.br.ages.calculadoraback.dto.LoginDTO;
 import com.br.ages.calculadoraback.entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApi {
 
     @PostMapping(path = "")
-    private void login(@RequestBody UserEntity user) {
+    private void login(@RequestBody LoginDTO user) {
 
     }
-
-
 }

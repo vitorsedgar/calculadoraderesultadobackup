@@ -2,6 +2,7 @@ package com.br.ages.calculadoraback.utils.handlers;
 
 import com.br.ages.calculadoraback.utils.exceptions.ProductException;
 import com.br.ages.calculadoraback.utils.exceptions.ProductNotFoundException;
+import com.br.ages.calculadoraback.utils.exceptions.ProductsNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +18,11 @@ public class ProductExceptionHandler {
 
     @ExceptionHandler(value = ProductNotFoundException.class)
     public ResponseEntity<Object> notFoundException(ProductNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = ProductsNotFoundException.class)
+    public ResponseEntity<Object> productsNotFoundException(ProductsNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
