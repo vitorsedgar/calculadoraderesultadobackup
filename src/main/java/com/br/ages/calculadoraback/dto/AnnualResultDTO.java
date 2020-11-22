@@ -1,7 +1,5 @@
 package com.br.ages.calculadoraback.dto;
 
-import com.br.ages.calculadoraback.entity.AnualResultPK;
-import com.br.ages.calculadoraback.entity.CooperativeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnualResultDTO {
+public class AnnualResultDTO {
     private BigDecimal result;
-    private Long year;
-    private CooperativeEntity idCoop;
+    private int year;
 }

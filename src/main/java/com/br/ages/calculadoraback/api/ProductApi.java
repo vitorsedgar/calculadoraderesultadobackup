@@ -1,8 +1,6 @@
 package com.br.ages.calculadoraback.api;
 
 import com.br.ages.calculadoraback.dto.AddProductRequestDTO;
-import com.br.ages.calculadoraback.dto.EditCooperativeProductRequestDTO;
-import com.br.ages.calculadoraback.dto.NonCoopProductDTO;
 import com.br.ages.calculadoraback.dto.Product;
 import com.br.ages.calculadoraback.entity.ProductEntity;
 import com.br.ages.calculadoraback.service.CooperativeProductService;
@@ -16,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/product")
 public class ProductApi {
 
     private final ProductService productService;
@@ -32,7 +30,7 @@ public class ProductApi {
     public ResponseEntity<Product> addProduct(@RequestHeader(name = "authorization") String authorization,
                                               @RequestBody AddProductRequestDTO productDTO) {
         log.info(" Start Add product");
-        Product product = this.cooperativeProductService.addProduct("", productDTO);
+        Product product = this.cooperativeProductService.addProduct(authorization, productDTO);
         log.info(" End Add product");
         return ResponseEntity.ok(product);
     }
@@ -40,11 +38,17 @@ public class ProductApi {
     // TODO Mover lógica para CooperativeProductApi
     @PutMapping(path = "/edit")
     public ResponseEntity<Product> editProduct(@RequestHeader(name = "authorization") String authorization,
-                                              @RequestBody AddProductRequestDTO productDTO) {
+                                               @RequestBody AddProductRequestDTO productDTO) {
         log.info(" Start Edit product");
-        Product product = this.cooperativeProductService.editProduct("", productDTO);
+        Product product = this.cooperativeProductService.editProduct(authorization, productDTO);
         log.info(" End Edit product");
         return ResponseEntity.ok(product);
+    }
+
+    // TODO Mover lógica para CooperativeProductApi
+    @DeleteMapping(path = "/delete/{productId}")
+    public void deleteProduct(@RequestHeader(name = "authorization") String authorization, @PathVariable(name = "productId") Long productId) {
+        this.cooperativeProductService.deleteProduct(authorization, productId);
     }
 
     @GetMapping(path = "/{codCoop}")
@@ -59,9 +63,9 @@ public class ProductApi {
     // TODO: liberar rota somente a usuários de role "coop"
     @GetMapping(path = "")
     public ResponseEntity<Page<ProductEntity>> findProducts(@RequestHeader(name = "authorization") String authorization,
-                                                                @RequestParam("name") String name,
-                                                                @RequestParam( value = "page", required = false, defaultValue = "0") int page,
-                                                                @RequestParam( value = "size", required = false, defaultValue = "10") int size) {
+                                                            @RequestParam("name") String name,
+                                                            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         log.info(" Start Find products by Cooperative");
         Page<ProductEntity> products = productService.getAllProducts(name, page, size);
         log.info(" End Find products by Cooperative");

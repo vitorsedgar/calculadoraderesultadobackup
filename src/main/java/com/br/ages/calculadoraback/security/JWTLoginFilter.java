@@ -1,7 +1,6 @@
 package com.br.ages.calculadoraback.security;
 
 import com.br.ages.calculadoraback.dto.LoginDTO;
-import com.br.ages.calculadoraback.entity.UserEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

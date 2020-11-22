@@ -2,7 +2,9 @@ package com.br.ages.calculadoraback.service;
 
 import com.br.ages.calculadoraback.dto.AssociateProductDTO;
 import com.br.ages.calculadoraback.dto.CooperativeProductDTO;
-import com.br.ages.calculadoraback.entity.*;
+import com.br.ages.calculadoraback.entity.AnnualResultPK;
+import com.br.ages.calculadoraback.entity.CooperativeEntity;
+import com.br.ages.calculadoraback.entity.UserEntity;
 import com.br.ages.calculadoraback.utils.LocalDateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class CalculateResultService {
     private CooperativeProductService cooperativeProductService;
 
     @Autowired
-    private AnualResultService anualResultService;
+    private AnnualResultService annualResultService;
 
     @Autowired
     private LocalDateUtil localDateUtil;
@@ -28,28 +30,27 @@ public class CalculateResultService {
      * Resultado a ser distribuído / Quantidade de produtos da cooperativa = Valor destinado a cada produto (avaliar proporcionalidade por %)
      * ((Valor informado pelo a ssociado / Valor total de cada produto) * 100) * (Resultado alocado a cada produto) = Valor a ser distribuído ao associado
      */
-    public BigDecimal calculate(List<AssociateProductDTO> products) {
-        CooperativeEntity cooperativeEntity = CooperativeEntity.builder().idCoop(getIdCoopLoggedUser()).build();
-        List<CooperativeProductDTO> cooperativeProducts = this.cooperativeProductService.getCooperativeProducts(products, cooperativeEntity);
+    public BigDecimal calculate(CooperativeEntity cooperative, List<AssociateProductDTO> products) {
+        List<CooperativeProductDTO> cooperativeProducts = this.cooperativeProductService.getCooperativeProducts(products, cooperative);
 
-        BigDecimal resultToBeDistribuited = getAnualResult();
+        BigDecimal resultToBeDistributed = getAnnualResult(cooperative);
         BigDecimal clientResult = new BigDecimal(0);
 
         for (CooperativeProductDTO product : cooperativeProducts) {
-            BigDecimal toBeDistributed = resultToBeDistribuited.multiply(BigDecimal.valueOf(product.getWeight())).divide(BigDecimal.valueOf(100), 2, RoundingMode.CEILING);
+            BigDecimal toBeDistributed = resultToBeDistributed.multiply(BigDecimal.valueOf(product.getWeight())).divide(BigDecimal.valueOf(100), 2, RoundingMode.CEILING);
 
             BigDecimal clientPercentage = product.getAssociateProduct().getValue().divide(product.getValue(), 2, RoundingMode.CEILING);
 
-            BigDecimal valuetoAdd = toBeDistributed.multiply(clientPercentage);
-            clientResult = clientResult.add(valuetoAdd.setScale(2, RoundingMode.UNNECESSARY));
+            BigDecimal valueToAdd = toBeDistributed.multiply(clientPercentage);
+            clientResult = clientResult.add(valueToAdd.setScale(2, RoundingMode.UNNECESSARY));
         }
         return clientResult;
     }
 
-    private BigDecimal getAnualResult() {
-        return anualResultService.findByAnualResultPK(
-                AnualResultPK.builder()
-                        .idCoop(CooperativeEntity.builder().idCoop(getIdCoopLoggedUser()).build())
+    private BigDecimal getAnnualResult(CooperativeEntity cooperative) {
+        return annualResultService.findByAnnualResultPK(
+                AnnualResultPK.builder()
+                        .idCoop(cooperative)
                         .year(getYear())
                         .build())
                 .getResult();
@@ -57,11 +58,6 @@ public class CalculateResultService {
 
     private int getYear() {
         return localDateUtil.now().getYear();
-    }
-
-    // FIXME: Buscar idCoop na autenticacao
-    private Long getIdCoopLoggedUser() {
-        return 1L;
     }
 
 }

@@ -13,14 +13,14 @@ import java.time.LocalTime;
 @Configuration
 @EnableSwagger2
 public class SpringFoxConfig {
-		@Bean
-		public Docket apiDocket() {
-				return new Docket(DocumentationType.SWAGGER_2)
-						.useDefaultResponseMessages(false)
-						.directModelSubstitute(LocalTime.class, String.class)
-						.select()
-						.apis(RequestHandlerSelectors.basePackage("com.br.ages.calculadoraback.api"))
-						.paths(PathSelectors.any())
-						.build();
-		}
+    @Bean
+    public Docket apiDocket() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
+                .directModelSubstitute(LocalTime.class, String.class)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.br.ages.calculadoraback.api"))
+                .paths(PathSelectors.any())
+                .build();
+    }
 }

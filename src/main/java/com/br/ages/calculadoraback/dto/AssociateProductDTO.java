@@ -12,6 +12,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssociateProductDTO {
-		private Long id;
-		private BigDecimal value;
+    private Long id;
+    private BigDecimal value;
 }

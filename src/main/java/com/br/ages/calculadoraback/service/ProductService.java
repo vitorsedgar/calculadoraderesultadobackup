@@ -1,29 +1,21 @@
 package com.br.ages.calculadoraback.service;
 
-import com.br.ages.calculadoraback.dto.NonCoopProductDTO;
-import com.br.ages.calculadoraback.dto.Product;
-import com.br.ages.calculadoraback.entity.CategoryEntity;
 import com.br.ages.calculadoraback.entity.ProductEntity;
-import com.br.ages.calculadoraback.entity.UserEntity;
 import com.br.ages.calculadoraback.repository.CooperativeProductRepository;
 import com.br.ages.calculadoraback.repository.ProductRepository;
 import com.br.ages.calculadoraback.utils.exceptions.ProductNotFoundException;
 import com.br.ages.calculadoraback.utils.exceptions.ProductsNotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CooperativeProductRepository coopProductRepository;
-    private UserService userService;
-    private  CategoryService categoryService;
+    private final UserService userService;
+    private final CategoryService categoryService;
 
     public ProductService(ProductRepository productRepository, CooperativeProductRepository coopProductRepository, UserService userService, CategoryService categoryService) {
         this.productRepository = productRepository;
@@ -37,7 +29,7 @@ public class ProductService {
     }
 
     public ProductEntity getProductById(Long idProd) {
-        return productRepository.findByIdProd(idProd);
+        return productRepository.findByIdProd(idProd).orElseThrow(() -> new ProductNotFoundException(idProd));
     }
 
     public Page<ProductEntity> getAllProducts(String name, int page, int size) {

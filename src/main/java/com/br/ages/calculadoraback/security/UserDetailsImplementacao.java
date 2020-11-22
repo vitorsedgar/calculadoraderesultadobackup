@@ -30,7 +30,7 @@ public class UserDetailsImplementacao implements UserDetailsService {
         UserEntity user = userRepository.findByDocument(document).orElseThrow(() -> new Exception("usuario nao encontrado"));
 
         List<GrantedAuthority> authorities = Stream
-            .of(new SimpleGrantedAuthority(user.getRole() + "/" + user.getCodCoop().getCodCoop()))
+                .of(new SimpleGrantedAuthority(user.getRole() + "/" + user.getCodCoop().getCodCoop()))
                 .collect(Collectors.toList());
         return new User(user.getDocument(), user.getPassword(), authorities);
     }

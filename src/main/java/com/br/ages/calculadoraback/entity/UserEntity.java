@@ -10,25 +10,25 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class  UserEntity {
-	@Id
-	@SequenceGenerator(allocationSize = 1, name = "USUARIO_SEQ", sequenceName = "USUARIO_SEQ")
-	@GeneratedValue(generator = "USUARIO_SEQ", strategy = GenerationType.SEQUENCE)
-	private Long id_user;
+public class UserEntity {
+    @Id
+    @SequenceGenerator(allocationSize = 1, name = "USUARIO_SEQ", sequenceName = "USUARIO_SEQ")
+    @GeneratedValue(generator = "USUARIO_SEQ", strategy = GenerationType.SEQUENCE)
+    private Long id_user;
 
-	@Column
-	private String role;
+    @Column
+    private String role;
 
     @JoinColumn(name = "cod_coop")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
     private CooperativeEntity codCoop;
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	@Column
-	private String document;
+    @Column
+    private String document;
 
-	@Column
-	private String password;
+    @Column
+    private String password;
 }

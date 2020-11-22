@@ -1,6 +1,5 @@
 package com.br.ages.calculadoraback.utils.handlers;
 
-import com.br.ages.calculadoraback.utils.exceptions.CooperativeNotFoundException;
 import com.br.ages.calculadoraback.utils.exceptions.ValidationsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

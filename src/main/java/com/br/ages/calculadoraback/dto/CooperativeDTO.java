@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cooperative {
-    private Long idCoop;
+public class CooperativeDTO {
     private String codCoop;
     private String name;
 }

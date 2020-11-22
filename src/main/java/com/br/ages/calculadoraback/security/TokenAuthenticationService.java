@@ -25,23 +25,23 @@ public class TokenAuthenticationService {
         String authorities = authentication.getAuthorities().stream().collect(Collectors.toList()).get(0).getAuthority().split("/")[0];
         String allocation = authentication.getAuthorities().stream().collect(Collectors.toList()).get(0).getAuthority().split("/")[1];
         String JWT = Jwts.builder()
-            .claim("document", authentication.getName())
-            .claim("role", authorities)
-            .claim("coop", allocation)
-            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .signWith(SignatureAlgorithm.HS512, SECRET)
-            .compact();
+                .claim("document", authentication.getName())
+                .claim("role", authorities)
+                .claim("coop", allocation)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .compact();
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
     }
 
     public static HttpServletResponse addAuthentication(HttpServletResponse response, UserEntity userEntity) {
         String JWT = Jwts.builder()
-            .claim("document", userEntity.getDocument())
-            .claim("role", userEntity.getRole())
-            .claim("coop", userEntity.getCodCoop().getCodCoop())
-            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .signWith(SignatureAlgorithm.HS512, SECRET)
-            .compact();
+                .claim("document", userEntity.getDocument())
+                .claim("role", userEntity.getRole())
+                .claim("coop", userEntity.getCodCoop().getCodCoop())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .compact();
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
         return response;
     }
@@ -51,10 +51,10 @@ public class TokenAuthenticationService {
         try {
             if (token != null) {
                 String user = (String) Jwts.parser()
-                    .setSigningKey(SECRET)
-                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                    .getBody()
-                    .get("document");
+                        .setSigningKey(SECRET)
+                        .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                        .getBody()
+                        .get("document");
 
                 if (user != null) {
                     return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());

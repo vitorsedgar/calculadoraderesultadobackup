@@ -1,12 +1,11 @@
 package com.br.ages.calculadoraback.service;
 
-import com.br.ages.calculadoraback.dto.AssociateProductDTO;
-import com.br.ages.calculadoraback.dto.RegisterDTO;
-import com.br.ages.calculadoraback.entity.*;
+import com.br.ages.calculadoraback.dto.UserDTO;
+import com.br.ages.calculadoraback.entity.CooperativeEntity;
+import com.br.ages.calculadoraback.entity.UserEntity;
 import com.br.ages.calculadoraback.repository.UserRepository;
 import com.br.ages.calculadoraback.security.MD5Crypt;
 import com.br.ages.calculadoraback.utils.exceptions.CooperativeNotFoundException;
-import com.br.ages.calculadoraback.utils.exceptions.ProductNotFoundException;
 import com.br.ages.calculadoraback.utils.exceptions.UserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,7 +36,7 @@ public class UserServiceTest {
     @MockBean
     private UserRepository userRepository;
 
-    private RegisterDTO associate1;
+    private UserDTO associate1;
 
     private CooperativeEntity cooperativeEntityMock;
 
@@ -48,7 +45,7 @@ public class UserServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        associate1 = RegisterDTO.builder()
+        associate1 = UserDTO.builder()
                 .codCoop("0101")
                 .document("12345678910")
                 .name("Associado_01")

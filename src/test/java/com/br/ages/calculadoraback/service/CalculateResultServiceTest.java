@@ -2,11 +2,7 @@ package com.br.ages.calculadoraback.service;
 
 import com.br.ages.calculadoraback.dto.AssociateProductDTO;
 import com.br.ages.calculadoraback.dto.CooperativeProductDTO;
-import com.br.ages.calculadoraback.entity.AnualResultEntity;
-import com.br.ages.calculadoraback.entity.AnualResultPK;
-import com.br.ages.calculadoraback.entity.CoopProdPK;
-import com.br.ages.calculadoraback.entity.CooperativeEntity;
-import com.br.ages.calculadoraback.entity.ProductEntity;
+import com.br.ages.calculadoraback.entity.*;
 import com.br.ages.calculadoraback.utils.LocalDateUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +34,7 @@ public class CalculateResultServiceTest {
     private CooperativeProductService cooperativeProductService;
 
     @MockBean
-    private AnualResultService anualResultService;
+    private AnnualResultService annualResultService;
 
     @MockBean
     private LocalDateUtil localDateUtil;
@@ -57,11 +53,11 @@ public class CalculateResultServiceTest {
                 AssociateProductDTO.builder().id(2L).value(BigDecimal.valueOf(200)).build()
         );
 
+        CooperativeEntity cooperativeEntity = CooperativeEntity.builder().idCoop(1L).build();
+
         CooperativeProductDTO cooperativeProductEntityMock1 = CooperativeProductDTO.builder()
                 .coopProdPK(CoopProdPK.builder()
-                        .idCoop(CooperativeEntity.builder()
-                                .idCoop(1L)
-                                .build())
+                        .idCoop(cooperativeEntity)
                         .idProd(ProductEntity.builder()
                                 .idProd(1L)
                                 .build())
@@ -73,9 +69,7 @@ public class CalculateResultServiceTest {
 
         CooperativeProductDTO cooperativeProductEntityMock2 = CooperativeProductDTO.builder()
                 .coopProdPK(CoopProdPK.builder()
-                        .idCoop(CooperativeEntity.builder()
-                                .idCoop(1L)
-                                .build())
+                        .idCoop(cooperativeEntity)
                         .idProd(ProductEntity.builder()
                                 .idProd(2L)
                                 .build())
@@ -92,16 +86,16 @@ public class CalculateResultServiceTest {
 //        doReturn(cooperativeProductEntitiesMock).when(calculateResultService).toCooperativeProductEntities(any(), any());
         when(cooperativeProductService.getCooperativeProducts(any(), any())).thenReturn(cooperativeProductEntitiesMock);
 
-        AnualResultEntity anualResultEntityMock = AnualResultEntity.builder()
-                .anualResultPK(AnualResultPK.builder()
-                        .idCoop(CooperativeEntity.builder().idCoop(1L).build())
+        AnnualResultEntity annualResultEntityMock = AnnualResultEntity.builder()
+                .annualResultPK(AnnualResultPK.builder()
+                        .idCoop(cooperativeEntity)
                         .year(1997)
                         .build())
                 .result(BigDecimal.valueOf(10000))
                 .build();
-        when(anualResultService.findByAnualResultPK(any())).thenReturn(anualResultEntityMock);
+        when(annualResultService.findByAnnualResultPK(any())).thenReturn(annualResultEntityMock);
 
-        BigDecimal result = calculateResultService.calculate(products);
+        BigDecimal result = calculateResultService.calculate(cooperativeEntity, products);
 
         assertEquals(BigDecimal.valueOf(1000).setScale(2, RoundingMode.UNNECESSARY), result);
     }

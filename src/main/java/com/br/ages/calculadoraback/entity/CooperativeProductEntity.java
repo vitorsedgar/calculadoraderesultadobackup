@@ -16,12 +16,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CooperativeProductEntity {
-		@EmbeddedId
-		protected CoopProdPK coopProdPK;
+    @EmbeddedId
+    protected CoopProdPK coopProdPK;
 
-		@Column
-		private Double weight;
+    @Column
+    private Double weight;
 
-		@Column
-		private BigDecimal value;
+    @Column
+    private BigDecimal value;
 }

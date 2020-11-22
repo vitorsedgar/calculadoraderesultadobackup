@@ -13,13 +13,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryEntity {
-		@Id
-		@SequenceGenerator(allocationSize = 1, name = "id_category_seq", sequenceName = "id_category_seq")
-		@GeneratedValue(generator = "id_category_seq", strategy = GenerationType.SEQUENCE)
-		@Column(name = "id_category")
-		private Long idCategory;
+    @Id
+    @SequenceGenerator(allocationSize = 1, name = "id_category_seq", sequenceName = "id_category_seq")
+    @GeneratedValue(generator = "id_category_seq", strategy = GenerationType.SEQUENCE)
+    @Column(name = "id_category")
+    private Long idCategory;
 
-		@Column
-		private String name;
+    @Column
+    private String name;
 
 }

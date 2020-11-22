@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
@@ -13,9 +15,9 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnualResultEntity {
+public class AnnualResultEntity {
     @EmbeddedId
-    protected AnualResultPK anualResultPK;
+    protected AnnualResultPK annualResultPK;
 
     @Column(name = "result")
     private BigDecimal result;

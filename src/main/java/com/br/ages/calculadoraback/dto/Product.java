@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
-	private long idProd;
-	private String name;
-	private String categoryName;
-	private Double weight;
-	private BigDecimal value;
+    private long idProd;
+    private String name;
+    private String categoryName;
+    private Double weight;
+    private BigDecimal value;
 }

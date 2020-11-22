@@ -38,7 +38,7 @@ public class CooperativeProductServiceTest {
                 CoopProdPK.builder().idCoop(CooperativeEntity.builder().idCoop(1L).build())
                         .idProd(ProductEntity.builder().idProd(1L).build()).build()
         ).value(BigDecimal.TEN).build();
-            when(cooperativeProductService.findByCoopProdPK(any())).thenReturn(cooperativeProductEntityMock);
+        when(cooperativeProductService.findByCoopProdPK(any())).thenReturn(cooperativeProductEntityMock);
 
         AssociateProductDTO associateProductDTO = AssociateProductDTO.builder().id(1L).value(BigDecimal.ONE).build();
         CooperativeEntity cooperativeEntity = CooperativeEntity.builder().idCoop(1L).build();
